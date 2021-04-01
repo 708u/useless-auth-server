@@ -1,10 +1,10 @@
 package http
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 
+	"github.com/708u/useless-auth-server/internal/auth/action"
 	"github.com/go-chi/chi/v5"
 )
 
@@ -15,25 +15,9 @@ func NewRouter() http.Handler {
 	return routing(r)
 }
 
-type Handler func(w http.ResponseWriter, r *http.Request) error
-type Response struct {
-	Result string `json:"result,omitempty"`
-	Status int    `json:"status,omitempty"`
-}
-
-func HealthCheckAction(w http.ResponseWriter, r *http.Request) {
-	result := Response{Result: "OK", Status: http.StatusOK}
-	res, err := json.Marshal(result)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(res)
-}
-
 func routing(r *chi.Mux) chi.Router {
 	// health check
-	r.Get("/health", HealthCheckAction)
+	r.Get("/health", action.HealthCheckAction)
 
 	r.Route("/v1", v1Route)
 	return r
