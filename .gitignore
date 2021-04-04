@@ -12,4 +12,4 @@
 *.out
 
 # config
-config.yml
+config/**/*.yml

@@ -10,7 +10,7 @@ import (
 
 const (
 	ConfigName = "config"
-	ConfigPath = "config/auth"
+	ConfigPath = "config/client"
 	ConfigType = "yml"
 )
 

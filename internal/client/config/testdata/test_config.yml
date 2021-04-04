@@ -1,0 +1,4 @@
+env: testing
+http:
+  port:
+    8080
