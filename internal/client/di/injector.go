@@ -7,6 +7,7 @@ import (
 	"github.com/708u/useless-auth-server/internal/client/config"
 	infraHTTP "github.com/708u/useless-auth-server/internal/client/infrastructure/http"
 	"github.com/708u/useless-auth-server/internal/client/infrastructure/http/action"
+	common "github.com/708u/useless-auth-server/internal/common/infrastructure/http/action"
 )
 
 func NewServer() *client.Server {
@@ -28,6 +29,6 @@ func InjectRouter() http.Handler {
 
 func InjectAction() *action.Action {
 	return &action.Action{
-		HealthCheck: action.HealthCheckAction,
+		HealthCheck: common.HealthCheckAction,
 	}
 }

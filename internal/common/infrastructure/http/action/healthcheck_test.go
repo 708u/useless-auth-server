@@ -5,7 +5,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/708u/useless-auth-server/internal/auth/infrastructure/http/action"
+	"github.com/708u/useless-auth-server/internal/common/infrastructure/http/action"
 )
 
 func TestNewRouter(t *testing.T) {
