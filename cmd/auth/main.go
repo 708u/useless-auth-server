@@ -4,20 +4,15 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strconv"
 
 	"github.com/708u/useless-auth-server/internal/auth"
 )
 
 func main() {
-	s, err := auth.NewServer()
-	if err != nil {
-		fmt.Fprintf(
-			os.Stdout,
-			"creating new server failed: %s", err.Error(),
-		)
-	}
+	s := auth.NewServer()
 
-	if http.ListenAndServe(":8080", s.Router); err != nil {
+	if err := http.ListenAndServe(":"+strconv.Itoa(int(s.Config.HTTP.Port)), s.Router); err != nil {
 		fmt.Fprintf(os.Stdout, "failed to serve http server: %s", err.Error())
 	}
 }
