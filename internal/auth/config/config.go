@@ -15,23 +15,27 @@ const (
 	EnvProd  = "production"
 )
 
+const (
+	ConfigName = "config"
+	ConfigPath = "."
+	ConfigType = "yml"
+)
+
 type Config struct {
 	Env  string
-	HTTP struct {
-		Port uint16
-	}
+	HTTP HTTP
+}
+
+type HTTP struct {
+	Port uint16
 }
 
 // NewConfig returns config, incluedes environment vars.
-func NewConfig() Config {
-	return initConfig()
-}
-
-func initConfig() Config {
+func NewConfig(cName, cPath, cType string) Config {
 	// config file setting
-	viper.SetConfigName("config")
-	viper.AddConfigPath(".")
-	viper.SetConfigType("yml")
+	viper.SetConfigName(cName)
+	viper.AddConfigPath(cPath)
+	viper.SetConfigType(cType)
 
 	// env setting
 	viper.AutomaticEnv()
@@ -43,7 +47,7 @@ func initConfig() Config {
 	})
 
 	if err := viper.ReadInConfig(); err != nil {
-		panic("config file is not found")
+		panic(fmt.Sprintf("failed to read config: %s", err.Error()))
 	}
 	fmt.Printf("Using config file: %s\n", viper.ConfigFileUsed())
 

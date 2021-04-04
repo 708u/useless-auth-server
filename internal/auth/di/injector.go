@@ -17,7 +17,9 @@ func NewServer() *auth.Server {
 }
 
 func InjectConfig() config.Config {
-	return config.NewConfig()
+	return config.NewConfig(
+		config.ConfigName, config.ConfigPath, config.ConfigType,
+	)
 }
 
 func InjectRouter() http.Handler {
@@ -27,6 +29,5 @@ func InjectRouter() http.Handler {
 func InjectAction() *action.Action {
 	return &action.Action{
 		HealthCheck: action.HealthCheckAction,
-		UpdateSome:  action.UpdateSome("foobar"),
 	}
 }
