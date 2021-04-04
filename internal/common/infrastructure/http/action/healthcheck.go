@@ -9,7 +9,7 @@ type HealthCheckResponse struct {
 	Result string `json:"result,omitempty"`
 }
 
-// HealthCheckActions Returns http 200 status for health check
+// HealthCheckAction returns http 200 status for health check
 func HealthCheckAction(w http.ResponseWriter, r *http.Request) {
 	result := HealthCheckResponse{Result: "OK"}
 	res, err := json.Marshal(result)
