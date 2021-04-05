@@ -1,13 +1,13 @@
 package config
 
 import (
-	common "github.com/708u/useless-auth-server/internal/common/config"
+	common "github.com/708u/useless-auth-server/internal/pkg/config"
 	"github.com/spf13/viper"
 )
 
 const (
 	ConfigName = "config"
-	ConfigPath = "config/auth"
+	ConfigPath = "configs/auth"
 	ConfigType = "yml"
 )
 
