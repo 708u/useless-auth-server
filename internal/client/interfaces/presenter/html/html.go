@@ -6,7 +6,7 @@ import (
 	"html/template"
 	"net/http"
 
-	"github.com/708u/useless-auth-server/internal/client/interfaces/presenter"
+	"github.com/708u/useless-auth-server/internal/pkg/interfaces/presenter"
 )
 
 const (

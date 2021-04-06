@@ -15,6 +15,8 @@ func NewRenderer(r RenderHandler) *Renderer {
 	return &Renderer{RenderHandler: r}
 }
 
+// Render renders output.
+// it uses its own render handler to render the output
 func (r *Renderer) Render() error {
 	err := r.RenderHandler.Render()
 	if err != nil {

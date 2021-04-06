@@ -1,11 +1,11 @@
-package action_test
+package controller_test
 
 import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
-	"github.com/708u/useless-auth-server/internal/pkg/infrastructure/http/action"
+	"github.com/708u/useless-auth-server/internal/pkg/interfaces/controller"
 )
 
 func TestNewRouter(t *testing.T) {
@@ -21,7 +21,7 @@ func TestNewRouter(t *testing.T) {
 		},
 	}
 	t.Parallel()
-	healthCheck := action.NewHealthCheck()
+	healthCheck := controller.NewHealthCheck()
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
