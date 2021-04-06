@@ -5,8 +5,8 @@ import (
 	"net/http"
 
 	"github.com/708u/useless-auth-server/internal/client/interfaces/controller"
-	"github.com/708u/useless-auth-server/internal/client/interfaces/presenter"
 	"github.com/708u/useless-auth-server/internal/client/interfaces/presenter/html"
+	"github.com/708u/useless-auth-server/internal/pkg/interfaces/presenter"
 	"github.com/go-chi/chi/v5"
 )
 

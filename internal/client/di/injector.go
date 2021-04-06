@@ -7,7 +7,7 @@ import (
 	"github.com/708u/useless-auth-server/internal/client/config"
 	infraHTTP "github.com/708u/useless-auth-server/internal/client/infrastructure/http"
 	"github.com/708u/useless-auth-server/internal/client/interfaces/controller"
-	common "github.com/708u/useless-auth-server/internal/pkg/infrastructure/http/action"
+	common "github.com/708u/useless-auth-server/internal/pkg/interfaces/controller"
 )
 
 func NewServer() *client.Server {
