@@ -13,3 +13,6 @@
 
 # config
 configs/**/*.yml
+
+# editor config
+.vscode/

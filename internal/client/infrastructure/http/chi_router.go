@@ -5,6 +5,8 @@ import (
 	"net/http"
 
 	"github.com/708u/useless-auth-server/internal/client/infrastructure/http/action"
+	"github.com/708u/useless-auth-server/internal/client/interfaces/presenter"
+	"github.com/708u/useless-auth-server/internal/client/interfaces/presenter/html"
 	"github.com/go-chi/chi/v5"
 )
 
@@ -18,6 +20,13 @@ func NewRouter(a *action.Action) http.Handler {
 func routing(r *chi.Mux, action *action.Action) chi.Router {
 	// health check
 	r.Get("/health", action.HealthCheck)
+
+	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		renderer := presenter.NewRenderer(html.NewRenderHandler(w, html.PathIndex))
+		if err := renderer.Render(); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+	})
 
 	r.Route("/v1", v1Route(action))
 	return r
