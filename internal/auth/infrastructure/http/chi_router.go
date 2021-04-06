@@ -4,18 +4,18 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/708u/useless-auth-server/internal/auth/infrastructure/http/action"
+	"github.com/708u/useless-auth-server/internal/auth/interfaces/controller"
 	"github.com/go-chi/chi/v5"
 )
 
 // NewRouter returns chi http handler.
-func NewRouter(a *action.Actions) http.Handler {
+func NewRouter(a *controller.Actions) http.Handler {
 	r := chi.NewRouter()
 
 	return routing(r, a)
 }
 
-func routing(r *chi.Mux, a *action.Actions) chi.Router {
+func routing(r *chi.Mux, a *controller.Actions) chi.Router {
 	// health check
 	r.Get("/health", a.HealthCheck.Action)
 
@@ -23,7 +23,7 @@ func routing(r *chi.Mux, a *action.Actions) chi.Router {
 	return r
 }
 
-func v1Route(a *action.Actions) func(chi.Router) {
+func v1Route(a *controller.Actions) func(chi.Router) {
 	return func(r chi.Router) {
 		r.Get("/foo", func(w http.ResponseWriter, r *http.Request) {
 			fmt.Fprint(w, "/foo. Hello World from Go.")
