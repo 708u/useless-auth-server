@@ -21,12 +21,13 @@ func TestNewRouter(t *testing.T) {
 		},
 	}
 	t.Parallel()
+	healthCheck := action.NewHealthCheck()
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			req := httptest.NewRequest(http.MethodGet, "/health", nil)
 			got := httptest.NewRecorder()
-			action.HealthCheckAction(got, req)
+			healthCheck.Action(got, req)
 
 			if tt.wantCode != got.Result().StatusCode {
 				t.Errorf("wantCode: %d, got: %d", tt.wantCode, got.Code)

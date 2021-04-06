@@ -27,8 +27,8 @@ func InjectRouter() http.Handler {
 	return infraHTTP.NewRouter(InjectAction())
 }
 
-func InjectAction() *action.Action {
-	return &action.Action{
-		HealthCheck: common.HealthCheckAction,
+func InjectAction() *action.Actions {
+	return &action.Actions{
+		HealthCheck: common.NewHealthCheck(),
 	}
 }

@@ -5,12 +5,20 @@ import (
 	"net/http"
 )
 
+type HealthCheck struct {
+}
+
 type HealthCheckResponse struct {
 	Result string `json:"result,omitempty"`
 }
 
-// HealthCheckAction returns http 200 status for health check
-func HealthCheckAction(w http.ResponseWriter, r *http.Request) {
+// NewHealthCheck returns HealthCheck
+func NewHealthCheck() *HealthCheck {
+	return &HealthCheck{}
+}
+
+// Action returns http 200 status for health check
+func (h *HealthCheck) Action(w http.ResponseWriter, r *http.Request) {
 	result := HealthCheckResponse{Result: "OK"}
 	res, err := json.Marshal(result)
 	if err != nil {

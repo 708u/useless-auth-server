@@ -1,8 +1,8 @@
 package action
 
-import "net/http"
+import common "github.com/708u/useless-auth-server/internal/pkg/interfaces/action"
 
-// Action have all actions.
-type Action struct {
-	HealthCheck http.HandlerFunc
+// Actions have all actions.
+type Actions struct {
+	HealthCheck common.Action
 }

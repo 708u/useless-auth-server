@@ -11,15 +11,15 @@ import (
 )
 
 // NewRouter returns chi http handler.
-func NewRouter(a *action.Action) http.Handler {
+func NewRouter(a *action.Actions) http.Handler {
 	r := chi.NewRouter()
 
 	return routing(r, a)
 }
 
-func routing(r *chi.Mux, action *action.Action) chi.Router {
+func routing(r *chi.Mux, a *action.Actions) chi.Router {
 	// health check
-	r.Get("/health", action.HealthCheck)
+	r.Get("/health", a.HealthCheck.Action)
 
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		renderer := presenter.NewRenderer(html.NewRenderHandler(w, html.PathIndex))
@@ -28,11 +28,11 @@ func routing(r *chi.Mux, action *action.Action) chi.Router {
 		}
 	})
 
-	r.Route("/v1", v1Route(action))
+	r.Route("/v1", v1Route(a))
 	return r
 }
 
-func v1Route(action *action.Action) func(chi.Router) {
+func v1Route(a *action.Actions) func(chi.Router) {
 	return func(r chi.Router) {
 		r.Get("/foo", func(w http.ResponseWriter, r *http.Request) {
 			fmt.Fprint(w, "/foo. Hello World from Go.")
