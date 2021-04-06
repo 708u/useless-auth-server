@@ -1,8 +1,8 @@
-package action
+package controller
 
 import common "github.com/708u/useless-auth-server/internal/pkg/interfaces/controller"
 
-// Actions have all actions.
+// Action has all actions.
 type Actions struct {
 	HealthCheck common.Action
 }
