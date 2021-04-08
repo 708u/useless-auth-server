@@ -16,9 +16,6 @@ const (
 
 const (
 	Index = "index"
-
-	header = "_header"
-	footer = "_footer"
 )
 
 //go:embed template/*
@@ -27,10 +24,17 @@ var f embed.FS
 // template
 var t = template.Must(template.ParseFS(
 	f,
-	path(Index),
-	path(header),
-	path(footer),
+	templatePath+"*.html",
 ))
+
+type Layout struct {
+	Header Header
+	Output interface{}
+}
+
+type Header struct {
+	Title string
+}
 
 // RenderOutputOptions represents New Renderer options func
 type RenderOutputOptions func(*HTMLRenderHandler)
@@ -40,6 +44,14 @@ type HTMLRenderHandler struct {
 	writer   http.ResponseWriter
 	template string
 	Output   interface{}
+}
+
+func NewLayout(h Header, o interface{}) Layout {
+	return Layout{Header: h, Output: o}
+}
+
+func NewHeader(t string) Header {
+	return Header{Title: t}
 }
 
 // NewRenderHandler returns Renderer. optionally you can pass output data.
@@ -54,12 +66,6 @@ func NewRenderHandler(w http.ResponseWriter, t string, opts ...RenderOutputOptio
 	return r
 }
 
-// path returns relative template path
-// path("some") return templates/some.html
-func path(p string) string {
-	return templatePath + p + templateHTML
-}
-
 // Handle generate http template.
 func (r *HTMLRenderHandler) Handle() error {
 	if err := r.render(); err != nil {
@@ -69,7 +75,8 @@ func (r *HTMLRenderHandler) Handle() error {
 }
 
 func (r *HTMLRenderHandler) render() error {
-	if err := t.ExecuteTemplate(r.writer, r.template+templateHTML, r.Output); err != nil {
+	layout := NewLayout(NewHeader(r.template), r.Output)
+	if err := t.ExecuteTemplate(r.writer, r.template+templateHTML, layout); err != nil {
 		http.Error(r.writer, fmt.Sprintf("failed to exec template: %v", err.Error()), http.StatusInternalServerError)
 	}
 
