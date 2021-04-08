@@ -1,24 +1,42 @@
 package presenter
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 // Renderer represents output boundary
 type RenderHandler interface {
+	Handle() error
+}
+
+type Renderer interface {
+	Set(h RenderHandler)
 	Render() error
 }
 
-type Renderer struct {
+type Render struct {
 	RenderHandler RenderHandler
 }
 
-func NewRenderer(r RenderHandler) *Renderer {
-	return &Renderer{RenderHandler: r}
+// NewRenderer returns renderer
+func NewRenderer() Renderer {
+	return &Render{}
+}
+
+// Set sets render handler.
+func (r *Render) Set(h RenderHandler) {
+	r.RenderHandler = h
 }
 
 // Render renders output.
 // it uses its own render handler to render the output
-func (r *Renderer) Render() error {
-	err := r.RenderHandler.Render()
+func (r *Render) Render() error {
+	if r.RenderHandler == nil {
+		return errors.New("render handler must be set")
+	}
+
+	err := r.RenderHandler.Handle()
 	if err != nil {
 		return fmt.Errorf("render failed: %w", err)
 	}

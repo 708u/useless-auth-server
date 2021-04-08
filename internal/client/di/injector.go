@@ -8,6 +8,7 @@ import (
 	infraHTTP "github.com/708u/useless-auth-server/internal/client/infrastructure/http"
 	"github.com/708u/useless-auth-server/internal/client/interfaces/controller"
 	common "github.com/708u/useless-auth-server/internal/pkg/interfaces/controller"
+	"github.com/708u/useless-auth-server/internal/pkg/interfaces/presenter"
 )
 
 func NewServer() *client.Server {
@@ -28,7 +29,14 @@ func InjectRouter() http.Handler {
 }
 
 func InjectAction() *controller.Actions {
+	r := InjectRenderer()
+
 	return &controller.Actions{
 		HealthCheck: &common.HealthCheck{},
+		ShowIndex:   controller.NewShowIndex(r),
 	}
+}
+
+func InjectRenderer() presenter.Renderer {
+	return presenter.NewRenderer()
 }

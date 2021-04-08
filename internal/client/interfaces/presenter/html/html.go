@@ -24,6 +24,14 @@ const (
 //go:embed template/*
 var f embed.FS
 
+// template
+var t = template.Must(template.ParseFS(
+	f,
+	templatePath+PathIndex+templateHTML,
+	templatePath+pathHeader+templateHTML,
+	templatePath+pathFooter+templateHTML,
+))
+
 // RenderOutputOptions represents New Renderer options func
 type RenderOutputOptions func(*HTMLRenderHandler)
 
@@ -46,8 +54,8 @@ func NewRenderHandler(w http.ResponseWriter, t string, opts ...RenderOutputOptio
 	return r
 }
 
-// Render generate http template.
-func (r *HTMLRenderHandler) Render() error {
+// Handle generate http template.
+func (r *HTMLRenderHandler) Handle() error {
 	if err := r.render(); err != nil {
 		return fmt.Errorf("html render failed: %w", err)
 	}
@@ -55,18 +63,10 @@ func (r *HTMLRenderHandler) Render() error {
 }
 
 func (r *HTMLRenderHandler) render() error {
-	t, err := template.ParseFS(
-		f,
-		templatePath+r.template+templateHTML,
-		templatePath+pathHeader+templateHTML,
-		templatePath+pathFooter+templateHTML,
-	)
-	if err != nil {
-		return fmt.Errorf("failed to load template: %w", err)
+	if err := t.ExecuteTemplate(r.writer, r.template+templateHTML, r.Output); err != nil {
+		http.Error(r.writer, fmt.Sprintf("failed to exec template: %v", err.Error()), http.StatusInternalServerError)
 	}
-	if err := t.Execute(r.writer, r.Output); err != nil {
-		return fmt.Errorf("failed to exec template: %w", err)
-	}
+
 	return nil
 }
 
