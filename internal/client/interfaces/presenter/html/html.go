@@ -15,10 +15,10 @@ const (
 )
 
 const (
-	PathIndex = "index"
+	Index = "index"
 
-	pathHeader = "_header"
-	pathFooter = "_footer"
+	header = "_header"
+	footer = "_footer"
 )
 
 //go:embed template/*
@@ -27,9 +27,9 @@ var f embed.FS
 // template
 var t = template.Must(template.ParseFS(
 	f,
-	templatePath+PathIndex+templateHTML,
-	templatePath+pathHeader+templateHTML,
-	templatePath+pathFooter+templateHTML,
+	path(Index),
+	path(header),
+	path(footer),
 ))
 
 // RenderOutputOptions represents New Renderer options func
@@ -52,6 +52,12 @@ func NewRenderHandler(w http.ResponseWriter, t string, opts ...RenderOutputOptio
 		f(r)
 	}
 	return r
+}
+
+// path returns relative template path
+// path("some") return templates/some.html
+func path(p string) string {
+	return templatePath + p + templateHTML
 }
 
 // Handle generate http template.

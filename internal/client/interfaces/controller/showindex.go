@@ -18,6 +18,6 @@ func NewShowIndex(r presenter.Renderer) *ShowIndex {
 
 // Action shows index
 func (s *ShowIndex) Action(w http.ResponseWriter, r *http.Request) {
-	s.Renderer.Set(html.NewRenderHandler(w, html.PathIndex))
+	s.Renderer.Set(html.NewRenderHandler(w, html.Index))
 	s.Renderer.Render()
 }
