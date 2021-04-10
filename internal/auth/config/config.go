@@ -12,12 +12,17 @@ const (
 )
 
 type Config struct {
-	Env  string
-	HTTP HTTP
+	Env    string
+	HTTP   HTTP
+	Client Client
 }
 
 type HTTP struct {
 	Port uint16
+}
+
+type Client struct {
+	URL string
 }
 
 // NewConfig returns config, incluedes environment vars.

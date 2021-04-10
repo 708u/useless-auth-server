@@ -11,10 +11,12 @@ import (
 	"github.com/708u/useless-auth-server/internal/pkg/interfaces/presenter"
 )
 
+var conf = InjectConfig()
+
 func NewServer() *client.Server {
 	return &client.Server{
 		Router: InjectRouter(),
-		Config: InjectConfig(),
+		Config: conf,
 	}
 }
 
@@ -33,7 +35,7 @@ func InjectAction() *controller.Actions {
 
 	return &controller.Actions{
 		HealthCheck: &common.HealthCheck{},
-		ShowIndex:   controller.NewShowIndex(r),
+		ShowIndex:   controller.NewShowIndex(r, conf.Auth.URL),
 	}
 }
 

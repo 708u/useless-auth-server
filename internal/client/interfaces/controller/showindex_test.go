@@ -15,7 +15,8 @@ func TestNewShowIndex(t *testing.T) {
 	t.Parallel()
 
 	type args struct {
-		r presenter.Renderer
+		r   presenter.Renderer
+		url string
 	}
 	tests := []struct {
 		name string
@@ -25,14 +26,15 @@ func TestNewShowIndex(t *testing.T) {
 		{
 			name: "success new show index",
 			args: args{
-				r: &presenter.Render{},
+				r:   &presenter.Render{},
+				url: "http://localhost",
 			},
-			want: &controller.ShowIndex{Renderer: &presenter.Render{}},
+			want: &controller.ShowIndex{Renderer: &presenter.Render{}, AuthURL: "http://localhost"},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := controller.NewShowIndex(tt.args.r); !reflect.DeepEqual(got, tt.want) {
+			if got := controller.NewShowIndex(tt.args.r, "http://localhost"); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("NewShowIndex() = %v, want %v", got, tt.want)
 			}
 		})

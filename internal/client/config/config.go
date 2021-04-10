@@ -14,10 +14,15 @@ const (
 type Config struct {
 	Env  string
 	HTTP HTTP
+	Auth Auth
 }
 
 type HTTP struct {
 	Port uint16
+}
+
+type Auth struct {
+	URL string
 }
 
 // NewConfig returns config, incluedes environment vars.
