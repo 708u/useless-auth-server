@@ -4,3 +4,6 @@ http:
     9000
 auth:
   url: http://localhost:9001
+client:
+  id: useless-auth-server-client
+  secret: secret
