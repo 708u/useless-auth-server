@@ -27,6 +27,8 @@ func routing(r *chi.Mux, a *controller.Actions) chi.Router {
 
 func v1Route(a *controller.Actions) func(chi.Router) {
 	return func(r chi.Router) {
+		r.Get("/authorize", a.GetAuthorize.Action)
+
 		r.Get("/foo", func(w http.ResponseWriter, r *http.Request) {
 			fmt.Fprint(w, "/foo. Hello World from Go.")
 		})
