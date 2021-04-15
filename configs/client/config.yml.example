@@ -7,3 +7,4 @@ auth:
 client:
   id: useless-auth-server-client
   secret: secret
+  redirectURI: "http://localhost:9000/callback"

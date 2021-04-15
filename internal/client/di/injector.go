@@ -5,8 +5,11 @@ import (
 
 	"github.com/708u/useless-auth-server/internal/client"
 	"github.com/708u/useless-auth-server/internal/client/config"
+	"github.com/708u/useless-auth-server/internal/client/domain/repository"
+	"github.com/708u/useless-auth-server/internal/client/domain/usecase"
 	infraHTTP "github.com/708u/useless-auth-server/internal/client/infrastructure/http"
 	"github.com/708u/useless-auth-server/internal/client/interfaces/controller"
+	"github.com/708u/useless-auth-server/internal/client/interfaces/gateway"
 	common "github.com/708u/useless-auth-server/internal/pkg/interfaces/controller"
 	"github.com/708u/useless-auth-server/internal/pkg/interfaces/presenter"
 )
@@ -32,13 +35,36 @@ func InjectRouter() http.Handler {
 
 func InjectAction() *controller.Actions {
 	r := InjectRenderer()
+	usecase := InjectUseCase()
 
 	return &controller.Actions{
 		HealthCheck: &common.HealthCheck{},
-		ShowIndex:   controller.NewShowIndex(r, conf.Auth.URL),
+
+		GetAuthorize: controller.NewGetAuthorize(
+			usecase.GetAuthorize,
+			r,
+			conf.Auth.URL,
+			conf.Client.ID,
+			conf.Client.RedirectURI,
+			conf.Auth.ResponseType,
+		),
+		ShowIndex: controller.NewShowIndex(r, conf.Auth.URL),
 	}
 }
 
 func InjectRenderer() presenter.Renderer {
 	return presenter.NewRenderer()
+}
+
+func InjectUseCase() *usecase.UseCase {
+	r := InjectRepository()
+	return &usecase.UseCase{
+		GetAuthorize: &usecase.GetAuthorizeInteractor{AuthorizeRepo: r.AuthorizeRepository},
+	}
+}
+
+func InjectRepository() *repository.Repo {
+	return &repository.Repo{
+		AuthorizeRepository: &gateway.AuthorizationGateway{},
+	}
 }
