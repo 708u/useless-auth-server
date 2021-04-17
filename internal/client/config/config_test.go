@@ -10,17 +10,31 @@ import (
 
 func TestConfig_NewConfig(t *testing.T) {
 	t.Parallel()
+
 	type args struct {
 		name string
 		path string
 		typ  string
 	}
+	wantConf := config.Config{
+		Env:  "testing",
+		HTTP: config.HTTP{Port: 9000},
+		Auth: config.Auth{
+			URL:          "http://localhost:9001",
+			ResponseType: "code",
+		},
+		Client: config.Client{
+			ID:          "useless-auth-server-client",
+			Secret:      "secret",
+			RedirectURI: "http://localhost:9000/callback",
+		},
+	}
 	tests := []struct {
-		name        string
-		args        args
-		want        config.Config
-		wantRecover bool
-		setEnv      func()
+		name          string
+		args          args
+		getWantConfig func() config.Config
+		wantRecover   bool
+		setEnv        func()
 	}{
 		{
 			name: "success new config",
@@ -29,10 +43,7 @@ func TestConfig_NewConfig(t *testing.T) {
 				path: "testdata",
 				typ:  "yml",
 			},
-			want: config.Config{
-				Env:  "testing",
-				HTTP: config.HTTP{Port: 8080},
-			},
+			getWantConfig: func() config.Config { return wantConf },
 		},
 		{
 			name: "success new config. override env",
@@ -47,9 +58,11 @@ func TestConfig_NewConfig(t *testing.T) {
 				os.Setenv(e, "override_testing")
 				os.Setenv(p, "1234")
 			},
-			want: config.Config{
-				Env:  "override_testing",
-				HTTP: config.HTTP{Port: 1234},
+			getWantConfig: func() config.Config {
+				c := wantConf
+				c.Env = "override_testing"
+				c.HTTP.Port = 1234
+				return c
 			},
 		},
 	}
@@ -62,7 +75,7 @@ func TestConfig_NewConfig(t *testing.T) {
 			}
 			got := config.NewConfig(tt.args.name, tt.args.path, tt.args.typ)
 
-			if diff := cmp.Diff(got, tt.want); diff != "" {
+			if diff := cmp.Diff(got, tt.getWantConfig()); diff != "" {
 				t.Errorf("(-got +want):\n%s", diff)
 			}
 		})

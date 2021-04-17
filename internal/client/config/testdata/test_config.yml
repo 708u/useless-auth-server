@@ -1,4 +1,10 @@
 env: testing
 http:
   port:
-    8080
+    9000
+auth:
+  url: http://localhost:9001
+client:
+  id: useless-auth-server-client
+  secret: secret
+  redirectURI: "http://localhost:9000/callback"
