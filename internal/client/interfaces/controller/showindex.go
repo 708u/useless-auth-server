@@ -3,8 +3,9 @@ package controller
 import (
 	"net/http"
 
-	"github.com/708u/useless-auth-server/internal/client/interfaces/presenter/html"
+	template "github.com/708u/useless-auth-server/internal/client/interfaces/presenter/html"
 	"github.com/708u/useless-auth-server/internal/pkg/interfaces/presenter"
+	"github.com/708u/useless-auth-server/internal/pkg/interfaces/presenter/html"
 )
 
 type ShowIndex struct {
@@ -22,6 +23,6 @@ func NewShowIndex(r presenter.Renderer, url string) *ShowIndex {
 
 // Action shows index
 func (s *ShowIndex) Action(w http.ResponseWriter, r *http.Request) {
-	s.Renderer.Set(html.NewRenderHandler(w, html.Index, html.WithOutput(s.AuthURL)))
+	s.Renderer.Set(html.NewRenderHandler(w, template.T, template.Index, html.WithOutput(s.AuthURL)))
 	s.Renderer.Render()
 }
