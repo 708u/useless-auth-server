@@ -12,37 +12,40 @@ import (
 	"github.com/708u/useless-auth-server/internal/pkg/interfaces/presenter"
 )
 
+var conf = injectConfig()
+
 func NewServer() *auth.Server {
 	return &auth.Server{
-		Router: InjectRouter(),
-		Config: InjectConfig(),
+		Router: injectRouter(),
+		Config: conf,
 	}
 }
 
-func InjectConfig() config.Config {
+func injectConfig() config.Config {
 	return config.NewConfig(
 		config.ConfigName, config.ConfigPath, config.ConfigType,
 	)
 }
 
-func InjectAction() *controller.Actions {
+func injectAction() *controller.Actions {
 	r := presenter.NewRenderer()
-	usecase := InjectUseCase()
+	usecase := injectUseCase()
 
 	return &controller.Actions{
 		HealthCheck: common.NewHealthCheck(),
 		GetAuthorize: &controller.GetAuthorize{
 			UseCase:  usecase.GetAuthorize,
 			Renderer: r,
+			AppURL:   conf.HTTP.URL,
 		},
 	}
 }
 
-func InjectRouter() http.Handler {
-	return infraHTTP.NewRouter(InjectAction())
+func injectRouter() http.Handler {
+	return infraHTTP.NewRouter(injectAction())
 }
 
-func InjectUseCase() *usecase.UseCase {
+func injectUseCase() *usecase.UseCase {
 	return &usecase.UseCase{
 		GetAuthorize: &usecase.GetAuthorizeInteractor{},
 	}

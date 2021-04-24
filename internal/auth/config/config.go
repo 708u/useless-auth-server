@@ -19,6 +19,7 @@ type Config struct {
 
 type HTTP struct {
 	Port uint16
+	URL  string
 }
 
 type Client struct {

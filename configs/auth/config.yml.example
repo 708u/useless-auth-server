@@ -1,6 +1,6 @@
 env: local
 http:
-  port:
-    9001
+  url: http://localhost:9001
+  port: 9001
 client:
   url: http://localhost:9000
