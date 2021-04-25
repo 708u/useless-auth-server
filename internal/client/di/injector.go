@@ -40,6 +40,7 @@ func InjectAction() *controller.Actions {
 	return &controller.Actions{
 		HealthCheck: &common.HealthCheck{},
 
+		CallbackGetToken: controller.NewCallbackGetToken(),
 		GetAuthorize: controller.NewGetAuthorize(
 			usecase.GetAuthorize,
 			r,

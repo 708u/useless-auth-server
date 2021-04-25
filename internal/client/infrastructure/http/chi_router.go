@@ -1,7 +1,6 @@
 package http
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/708u/useless-auth-server/internal/client/interfaces/controller"
@@ -29,11 +28,6 @@ func v1Route(a *controller.Actions) func(chi.Router) {
 	return func(r chi.Router) {
 		r.Get("/authorize", a.GetAuthorize.Action)
 
-		r.Get("/foo", func(w http.ResponseWriter, r *http.Request) {
-			fmt.Fprint(w, "/foo. Hello World from Go.")
-		})
-		r.Get("/bar", func(w http.ResponseWriter, r *http.Request) {
-			fmt.Fprint(w, "/bar. Hello World from Golang.")
-		})
+		r.Get("/callback", a.CallbackGetToken.Action)
 	}
 }
