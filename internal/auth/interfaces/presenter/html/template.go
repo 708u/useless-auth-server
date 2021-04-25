@@ -11,7 +11,8 @@ const (
 )
 
 const (
-	Index = "index"
+	Index     = "index"
+	Authorize = "authorize"
 )
 
 //go:embed template/*
