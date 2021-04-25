@@ -5,6 +5,7 @@ import (
 
 	"github.com/708u/useless-auth-server/internal/auth"
 	"github.com/708u/useless-auth-server/internal/auth/config"
+	"github.com/708u/useless-auth-server/internal/auth/domain/service"
 	"github.com/708u/useless-auth-server/internal/auth/domain/usecase"
 	infraHTTP "github.com/708u/useless-auth-server/internal/auth/infrastructure/http"
 	"github.com/708u/useless-auth-server/internal/auth/interfaces/controller"
@@ -14,6 +15,12 @@ import (
 
 var conf = injectConfig()
 
+func injectConfig() config.Config {
+	return config.NewConfig(
+		config.ConfigName, config.ConfigPath, config.ConfigType,
+	)
+}
+
 func NewServer() *auth.Server {
 	return &auth.Server{
 		Router: injectRouter(),
@@ -21,32 +28,35 @@ func NewServer() *auth.Server {
 	}
 }
 
-func injectConfig() config.Config {
-	return config.NewConfig(
-		config.ConfigName, config.ConfigPath, config.ConfigType,
-	)
+func injectRouter() http.Handler {
+	return infraHTTP.NewRouter(injectAction())
 }
 
 func injectAction() *controller.Actions {
-	r := presenter.NewRenderer()
-	usecase := injectUseCase()
+	u := injectUseCase()
 
 	return &controller.Actions{
 		HealthCheck: common.NewHealthCheck(),
 		GetAuthorize: &controller.GetAuthorize{
-			UseCase:  usecase.GetAuthorize,
-			Renderer: r,
+			UseCase:  u.GetAuthorize,
+			Renderer: presenter.NewRenderer(),
 			AppURL:   conf.HTTP.URL,
 		},
 	}
 }
 
-func injectRouter() http.Handler {
-	return infraHTTP.NewRouter(injectAction())
+func injectUseCase() *usecase.UseCase {
+	srv := injectService()
+
+	return &usecase.UseCase{
+		GetAuthorize: &usecase.GetAuthorizeInteractor{
+			URLService: srv.URL,
+		},
+	}
 }
 
-func injectUseCase() *usecase.UseCase {
-	return &usecase.UseCase{
-		GetAuthorize: &usecase.GetAuthorizeInteractor{},
+func injectService() *service.Service {
+	return &service.Service{
+		URL: service.NewURLService(conf.HTTP.URL),
 	}
 }
