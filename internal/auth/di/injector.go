@@ -33,14 +33,18 @@ func injectRouter() http.Handler {
 }
 
 func injectAction() *controller.Actions {
+	r := presenter.NewRenderer()
 	u := injectUseCase()
 
 	return &controller.Actions{
 		HealthCheck: common.NewHealthCheck(),
 		GetAuthorize: &controller.GetAuthorize{
 			UseCase:  u.GetAuthorize,
-			Renderer: presenter.NewRenderer(),
+			Renderer: r,
 			AppURL:   conf.HTTP.URL,
+		},
+		ShowAuthorize: &controller.ShowAuthorize{
+			Renderer: r,
 		},
 	}
 }

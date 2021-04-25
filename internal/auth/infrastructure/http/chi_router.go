@@ -17,6 +17,8 @@ func NewRouter(a *controller.Actions) http.Handler {
 func routing(r *chi.Mux, a *controller.Actions) chi.Router {
 	// health check
 	r.Get("/health", a.HealthCheck.Action)
+	// authorization page
+	r.Get("/authorize", a.ShowAuthorize.Action)
 
 	r.Route("/v1", v1Route(a))
 	return r
