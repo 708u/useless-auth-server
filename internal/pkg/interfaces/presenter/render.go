@@ -11,7 +11,7 @@ type RenderHandler interface {
 }
 
 type Renderer interface {
-	Set(h RenderHandler)
+	Set(h RenderHandler) Renderer
 	Render() error
 }
 
@@ -25,8 +25,9 @@ func NewRenderer() Renderer {
 }
 
 // Set sets render handler.
-func (r *Render) Set(h RenderHandler) {
+func (r *Render) Set(h RenderHandler) Renderer {
 	r.RenderHandler = h
+	return r
 }
 
 // Render renders output.
