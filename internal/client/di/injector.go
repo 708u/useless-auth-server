@@ -40,7 +40,12 @@ func InjectAction() *controller.Actions {
 	return &controller.Actions{
 		HealthCheck: &common.HealthCheck{},
 
-		CallbackGetToken: controller.NewCallbackGetToken(usecase.GetToken, r),
+		CallbackGetToken: controller.NewCallbackGetToken(
+			conf.Auth.URL,
+			conf.Client.RedirectURI,
+			usecase.GetToken,
+			r,
+		),
 		GetAuthorize: controller.NewGetAuthorize(
 			usecase.GetAuthorize,
 			r,
@@ -61,7 +66,7 @@ func InjectUseCase() *usecase.UseCase {
 	r := InjectRepository()
 	return &usecase.UseCase{
 		GetAuthorize: &usecase.GetAuthorizeInteractor{AuthorizeRepo: r.AuthorizeRepository},
-		GetToken:     &usecase.GetTokenInteractor{},
+		GetToken:     &usecase.GetTokenInteractor{AuthorizeRepo: r.AuthorizeRepository},
 	}
 }
 

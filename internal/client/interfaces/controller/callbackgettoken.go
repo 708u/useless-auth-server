@@ -13,23 +13,32 @@ import (
 type CallbackGetToken struct {
 	UseCase  usecase.GetTokenUseCase
 	Renderer presenter.Renderer
+
+	AuthServerURI string
+	RedirectURI   string
 }
 
 type CallbackGetTokenRequest struct {
 	Code string `schema:"code"`
 }
 
-func NewCallbackGetToken(u usecase.GetTokenUseCase, r presenter.Renderer) *CallbackGetToken {
+func NewCallbackGetToken(aURI, rURI string, u usecase.GetTokenUseCase, r presenter.Renderer) *CallbackGetToken {
 	return &CallbackGetToken{
-		UseCase:  u,
-		Renderer: r,
+		AuthServerURI: aURI,
+		RedirectURI:   rURI,
+		UseCase:       u,
+		Renderer:      r,
 	}
 }
 
 func (c *CallbackGetToken) Action(w http.ResponseWriter, r *http.Request) {
 	var req CallbackGetTokenRequest
 	schema.NewDecoder().Decode(&req, r.URL.Query())
-	in := usecase.GetTokenInput{AuthorizationCode: req.Code}
+	in := usecase.GetTokenInput{
+		AuthServerURI:     c.AuthServerURI,
+		AuthorizationCode: req.Code,
+		RedirectURI:       c.RedirectURI,
+	}
 
 	out, err := c.UseCase.Handle(in)
 	if err != nil {
@@ -37,6 +46,5 @@ func (c *CallbackGetToken) Action(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 	}
 	// TODO: temporal set
-	c.Renderer.Set(json.NewRenderHandler(w, r, out, 200))
-
+	c.Renderer.Set(json.NewRenderHandler(w, r, out, 200)).Render()
 }
