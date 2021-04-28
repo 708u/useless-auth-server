@@ -46,6 +46,10 @@ func injectAction() *controller.Actions {
 		ShowAuthorize: &controller.ShowAuthorize{
 			Renderer: r,
 		},
+		IssueToken: &controller.IssueToken{
+			UseCase:  u.IssueToken,
+			Renderer: r,
+		},
 	}
 }
 
@@ -56,6 +60,8 @@ func injectUseCase() *usecase.UseCase {
 		GetAuthorize: &usecase.GetAuthorizeInteractor{
 			URLService: srv.URL,
 		},
+
+		IssueToken: &usecase.IssueTokenInteractor{},
 	}
 }
 

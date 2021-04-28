@@ -26,6 +26,10 @@ func routing(r *chi.Mux, a *controller.Actions) chi.Router {
 
 func v1Route(a *controller.Actions) func(chi.Router) {
 	return func(r chi.Router) {
+		// auth page redirection
 		r.Get("/authorize", a.GetAuthorize.Action)
+
+		// issue token
+		r.Post("/token", a.IssueToken.Action)
 	}
 }

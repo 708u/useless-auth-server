@@ -70,6 +70,7 @@ func (a *AuthorizationGateway) GetAccessToken(oURI, code, rURI string) (string, 
 	req, _ := http.NewRequest(http.MethodPost, u.String(), body)
 
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	req.URL.Path = authServerTokenEndpoint
 	// TODO: set client id and secret
 	req.SetBasicAuth("client_id", "client_secret")
 

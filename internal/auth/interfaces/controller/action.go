@@ -4,7 +4,10 @@ import common "github.com/708u/useless-auth-server/internal/pkg/interfaces/contr
 
 // Actions have all actions.
 type Actions struct {
-	HealthCheck   common.Action
+	HealthCheck common.Action
+
 	GetAuthorize  common.Action
 	ShowAuthorize common.Action
+
+	IssueToken common.Action
 }
