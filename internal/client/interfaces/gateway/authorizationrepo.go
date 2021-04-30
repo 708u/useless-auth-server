@@ -1,11 +1,15 @@
 package gateway
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
+
+	"github.com/708u/useless-auth-server/internal/client/domain/model/valueobject"
 )
 
 const (
@@ -16,6 +20,8 @@ const (
 const (
 	authGrantTypeCode = "authorization_code"
 )
+
+var emptyAC valueobject.AccessToken
 
 type AuthorizationGateway struct {
 }
@@ -55,10 +61,10 @@ func (a *AuthorizationGateway) GetAuthorizePage(oURI, cID, resType, rURI string)
 	return s[0], nil
 }
 
-func (a *AuthorizationGateway) GetAccessToken(oURI, code, rURI string) (string, error) {
+func (a *AuthorizationGateway) GetAccessToken(oURI, code, rURI string) (valueobject.AccessToken, error) {
 	u, err := url.Parse(oURI)
 	if err != nil {
-		return "", fmt.Errorf("failed AuthorizeGateway.GetAccessToken: %w", err)
+		return emptyAC, fmt.Errorf("failed AuthorizeGateway.GetAccessToken: %w", err)
 	}
 
 	form := url.Values{}
@@ -66,8 +72,8 @@ func (a *AuthorizationGateway) GetAccessToken(oURI, code, rURI string) (string, 
 	form.Add("code", code)
 	form.Add("redirect_uri", rURI)
 
-	body := strings.NewReader(form.Encode())
-	req, _ := http.NewRequest(http.MethodPost, u.String(), body)
+	reqBody := strings.NewReader(form.Encode())
+	req, _ := http.NewRequest(http.MethodPost, u.String(), reqBody)
 
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	req.URL.Path = authServerTokenEndpoint
@@ -77,9 +83,19 @@ func (a *AuthorizationGateway) GetAccessToken(oURI, code, rURI string) (string, 
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		return "", fmt.Errorf("failed AuthorizeGateway.GetAccessToken: %w", err)
+		return emptyAC, fmt.Errorf("failed AuthorizeGateway.GetAccessToken: %w", err)
 	}
 
-	// TODO: handle response(get token) and marshal json
-	return resp.Status, nil
+	respBody, err := ioutil.ReadAll(resp.Body)
+	defer resp.Body.Close()
+	if err != nil {
+		return emptyAC, err
+	}
+
+	var accessToken valueobject.AccessToken
+	if err := json.Unmarshal(respBody, &accessToken); err != nil {
+		return emptyAC, fmt.Errorf("failed AuthorizeGateway.GetAccessToken: %w", err)
+	}
+
+	return accessToken, nil
 }

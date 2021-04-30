@@ -1,6 +1,10 @@
 package usecase
 
-import "github.com/708u/useless-auth-server/internal/client/domain/repository"
+import (
+	"fmt"
+
+	"github.com/708u/useless-auth-server/internal/client/domain/repository"
+)
 
 type GetTokenUseCase interface {
 	Handle(in GetTokenInput) (GetTokenOutput, error)
@@ -15,10 +19,19 @@ type GetTokenInput struct {
 	AuthorizationCode string
 	RedirectURI       string
 }
-type GetTokenOutput struct{}
+type GetTokenOutput struct {
+	AccessToken string `json:"access_token"`
+	TokenType   string `json:"token_type"`
+}
 
 func (g *GetTokenInteractor) Handle(in GetTokenInput) (GetTokenOutput, error) {
-	g.AuthorizeRepo.GetAccessToken(in.AuthServerURI, in.AuthorizationCode, in.RedirectURI)
-	// TODO: implement post token request
-	return GetTokenOutput{}, nil
+	accessToken, err := g.AuthorizeRepo.GetAccessToken(in.AuthServerURI, in.AuthorizationCode, in.RedirectURI)
+	if err != nil {
+		return GetTokenOutput{}, fmt.Errorf("failed GetTokenUseCase.Handle: %w", err)
+	}
+
+	return GetTokenOutput{
+		AccessToken: accessToken.Value,
+		TokenType:   accessToken.TokenType,
+	}, nil
 }

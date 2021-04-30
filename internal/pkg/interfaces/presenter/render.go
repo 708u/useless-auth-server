@@ -3,7 +3,11 @@ package presenter
 import (
 	"errors"
 	"fmt"
+
+	"github.com/gorilla/schema"
 )
+
+var Decoder = schema.NewDecoder()
 
 // Renderer represents output boundary
 type RenderHandler interface {

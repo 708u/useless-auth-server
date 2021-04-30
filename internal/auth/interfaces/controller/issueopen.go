@@ -7,7 +7,6 @@ import (
 	"github.com/708u/useless-auth-server/internal/auth/domain/usecase"
 	"github.com/708u/useless-auth-server/internal/pkg/interfaces/presenter"
 	"github.com/708u/useless-auth-server/internal/pkg/interfaces/presenter/json"
-	"github.com/gorilla/schema"
 )
 
 type IssueToken struct {
@@ -21,14 +20,20 @@ type IssueActionRequest struct {
 	RedirectURI string `schema:"redirect_uri"`
 }
 
+type IssueActionResponse struct {
+	AccessToken string `json:"access_token"`
+	TokenType   string `json:"token_type"`
+}
+
 func (i *IssueToken) Action(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	var req IssueActionRequest
-	if err := schema.NewDecoder().Decode(&req, r.PostForm); err != nil {
+	if err := presenter.Decoder.Decode(&req, r.PostForm); err != nil {
 		// TODO: fix
 		fmt.Printf("failed issue token: %s", err.Error())
 		return
 	}
+
 	cID, cSecret, ok := r.BasicAuth()
 	if !ok {
 		// TODO: fix
@@ -36,17 +41,24 @@ func (i *IssueToken) Action(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	in := usecase.IssueTokenInput{
-		ClientID:     cID,
-		ClientSecret: cSecret,
-		Code:         req.Code,
-		GrantType:    req.GrantType,
-		RedirectURI:  req.RedirectURI,
-	}
-	out, err := i.UseCase.Handle(in)
+	out, err := i.UseCase.Handle(
+		usecase.IssueTokenInput{
+			ClientID:     cID,
+			ClientSecret: cSecret,
+			Code:         req.Code,
+			GrantType:    req.GrantType,
+			RedirectURI:  req.RedirectURI,
+		})
+
 	if err != nil {
 		fmt.Printf("failed issue token: %s", err.Error())
 		return
 	}
-	i.Renderer.Set(json.NewRenderHandler(w, r, out, 200)).Render()
+
+	resp := IssueActionResponse{
+		AccessToken: out.AccessToken,
+		TokenType:   out.TokenType,
+	}
+
+	i.Renderer.Set(json.NewRenderHandler(w, r, resp, 200)).Render()
 }
