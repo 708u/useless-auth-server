@@ -8,10 +8,7 @@ import (
 	"github.com/708u/useless-auth-server/internal/pkg/interfaces/presenter"
 )
 
-const (
-	templatePath = "template/"
-	templateHTML = ".html"
-)
+const templateHTML = ".html"
 
 type Layout struct {
 	Header Header
