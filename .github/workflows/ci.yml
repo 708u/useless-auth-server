@@ -12,6 +12,8 @@ env:
 jobs:
   unit-test:
     runs-on: ubuntu-latest
+    env:
+      GO111MODULE: on
     services:
       mysql:
         image: mysql:8.0.24
