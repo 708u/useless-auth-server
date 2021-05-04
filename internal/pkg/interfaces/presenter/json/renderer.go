@@ -44,7 +44,9 @@ func (r *JSONRenderHandler) render() error {
 
 	r.writer.Header().Set("Content-Type", "application/json")
 	r.writer.WriteHeader(r.StatusCode)
-	r.writer.Write(resp)
+	if _, err := r.writer.Write(resp); err != nil {
+		http.Error(r.writer, err.Error(), http.StatusInternalServerError)
+	}
 
 	return nil
 }

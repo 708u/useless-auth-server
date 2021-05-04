@@ -42,6 +42,6 @@ func (g *GetAuthorize) Action(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(out.URI)
 	}
 
-	g.Renderer.Set(redirect.NewRenderHandler(w, r, out.URI))
-	g.Renderer.Render()
+	// TODO: fix
+	_ = g.Renderer.Set(redirect.NewRenderHandler(w, r, out.URI)).Render()
 }

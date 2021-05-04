@@ -33,7 +33,8 @@ func NewCallbackGetToken(aURI, rURI string, u usecase.GetTokenUseCase, r present
 
 func (c *CallbackGetToken) Action(w http.ResponseWriter, r *http.Request) {
 	var req CallbackGetTokenRequest
-	schema.NewDecoder().Decode(&req, r.URL.Query())
+	// TODO: handle it
+	_ = schema.NewDecoder().Decode(&req, r.URL.Query())
 	in := usecase.GetTokenInput{
 		AuthServerURI:     c.AuthServerURI,
 		AuthorizationCode: req.Code,
@@ -46,5 +47,5 @@ func (c *CallbackGetToken) Action(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 	}
 	// TODO: temporal set
-	c.Renderer.Set(json.NewRenderHandler(w, r, out, 200)).Render()
+	_ = c.Renderer.Set(json.NewRenderHandler(w, r, out, 200)).Render()
 }

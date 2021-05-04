@@ -1,0 +1,48 @@
+name: ci
+
+on: [push]
+
+env:
+  CGO_ENABLED: 0
+  MYSQL_HOST: 127.0.0.1
+  MYSQL_PORT: 3306
+  MYSQL_USERNAME: user
+  MYSQL_PASSWORD: password
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    env:
+      GO111MODULE: on
+    services:
+      mysql:
+        image: mysql:8.0.24
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_USER: user
+          MYSQL_PASSWORD: password
+          MYSQL_ROOT_PASSWORD: "password"
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: '1.16.2'
+      - name: cache packages
+        uses: actions/cache@v2.1.4
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+      - name: run unit test
+        run: go test ./... -v
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v2
+        with:
+          version: latest
+      - name: run gosec security scanner
+        run: |
+          export PATH=$PATH:$(go env GOPATH)/bin
+          go get github.com/securego/gosec/cmd/gosec
+          gosec ./...

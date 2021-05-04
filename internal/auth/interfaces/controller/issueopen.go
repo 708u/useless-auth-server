@@ -26,7 +26,11 @@ type IssueActionResponse struct {
 }
 
 func (i *IssueToken) Action(w http.ResponseWriter, r *http.Request) {
-	r.ParseForm()
+	// TODO: fix
+	if err := r.ParseForm(); err != nil {
+		fmt.Printf("parse failed: %s", err.Error())
+		return
+	}
 	var req IssueActionRequest
 	if err := presenter.Decoder.Decode(&req, r.PostForm); err != nil {
 		// TODO: fix
@@ -51,6 +55,7 @@ func (i *IssueToken) Action(w http.ResponseWriter, r *http.Request) {
 		})
 
 	if err != nil {
+		// TODO: fix
 		fmt.Printf("failed issue token: %s", err.Error())
 		return
 	}
@@ -60,5 +65,6 @@ func (i *IssueToken) Action(w http.ResponseWriter, r *http.Request) {
 		TokenType:   out.TokenType,
 	}
 
-	i.Renderer.Set(json.NewRenderHandler(w, r, resp, 200)).Render()
+	// TODO: fix
+	_ = i.Renderer.Set(json.NewRenderHandler(w, r, resp, 200)).Render()
 }

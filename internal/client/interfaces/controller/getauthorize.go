@@ -45,6 +45,6 @@ func (a *GetAuthorize) Action(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, fmt.Sprintf("internal error: %s", err.Error()), http.StatusInternalServerError)
 	}
 
-	a.Renderer.Set(redirect.NewRenderHandler(w, r, out.RedirectTo))
-	a.Renderer.Render()
+	// TODO: fix
+	_ = a.Renderer.Set(redirect.NewRenderHandler(w, r, out.RedirectTo)).Render()
 }
