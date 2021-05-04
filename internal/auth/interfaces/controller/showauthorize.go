@@ -13,6 +13,6 @@ type ShowAuthorize struct {
 }
 
 func (s *ShowAuthorize) Action(w http.ResponseWriter, r *http.Request) {
-	s.Renderer.Set(commonHTML.NewRenderHandler(w, html.T, html.Authorize))
-	s.Renderer.Render()
+	// TODO: fix
+	_ = s.Renderer.Set(commonHTML.NewRenderHandler(w, html.T, html.Authorize)).Render()
 }
