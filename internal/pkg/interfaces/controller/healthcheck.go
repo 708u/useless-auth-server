@@ -2,6 +2,7 @@ package controller
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
@@ -25,5 +26,7 @@ func (h *HealthCheck) Action(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 	w.Header().Set("Content-Type", "application/json")
-	w.Write(res)
+	if _, err := w.Write(res); err != nil {
+		http.Error(w, fmt.Sprintf("w.Write failed: %s", err.Error()), http.StatusInternalServerError)
+	}
 }
