@@ -56,7 +56,7 @@ func InjectAction() *controller.Actions {
 		),
 		ShowIndex: controller.NewShowIndex(r, conf.Auth.URL),
 
-		FetchResource: controller.NewFetchResource(r),
+		FetchResource: controller.NewFetchResource(usecase.FetchResource, r),
 	}
 }
 
@@ -67,13 +67,17 @@ func InjectRenderer() presenter.Renderer {
 func InjectUseCase() *usecase.UseCase {
 	r := InjectRepository()
 	return &usecase.UseCase{
-		GetAuthorize: &usecase.GetAuthorizeInteractor{AuthorizeRepo: r.AuthorizeRepository},
-		GetToken:     &usecase.GetTokenInteractor{AuthorizeRepo: r.AuthorizeRepository},
+		GetAuthorize: &usecase.GetAuthorizeInteractor{AuthorizeRepo: r.AuthorizeRepo},
+		GetToken:     &usecase.GetTokenInteractor{AuthorizeRepo: r.AuthorizeRepo},
+		FetchResource: &usecase.FetchResourceInteractor{
+			ResourceRepo: r.ResourceRepo,
+		},
 	}
 }
 
 func InjectRepository() *repository.Repo {
 	return &repository.Repo{
-		AuthorizeRepository: &gateway.AuthorizationGateway{},
+		AuthorizeRepo: &gateway.AuthorizationGateway{},
+		ResourceRepo:  &gateway.ResourceGateway{},
 	}
 }
