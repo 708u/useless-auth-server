@@ -55,6 +55,8 @@ func InjectAction() *controller.Actions {
 			conf.Auth.ResponseType,
 		),
 		ShowIndex: controller.NewShowIndex(r, conf.Auth.URL),
+
+		FetchResource: controller.NewFetchResource(r),
 	}
 }
 

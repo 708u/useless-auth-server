@@ -19,6 +19,7 @@ func routing(r *chi.Mux, a *controller.Actions) chi.Router {
 	r.Get("/health", a.HealthCheck.Action)
 
 	r.Get("/", a.ShowIndex.Action)
+	r.Get("/fetch_resource", a.FetchResource.Action)
 
 	r.Route("/v1", v1Route(a))
 	return r

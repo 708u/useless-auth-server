@@ -11,7 +11,11 @@ const (
 )
 
 const (
+	// index
 	Index = "index"
+
+	// fetch resource
+	FetchResourceIndex = "fetch_resource"
 )
 
 //go:embed template/*
