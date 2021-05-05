@@ -78,6 +78,8 @@ func InjectUseCase() *usecase.UseCase {
 func InjectRepository() *repository.Repo {
 	return &repository.Repo{
 		AuthorizeRepo: &gateway.AuthorizationGateway{},
-		ResourceRepo:  &gateway.ResourceGateway{},
+		ResourceRepo: &gateway.ResourceGateway{
+			ResourceSrvURL: conf.Auth.URL,
+		},
 	}
 }

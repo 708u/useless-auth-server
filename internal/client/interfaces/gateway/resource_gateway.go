@@ -7,9 +7,11 @@ import (
 	"net/http"
 )
 
-const resourceAPI = "/v1/user"
+const resourceAPI = "/v1/resource/user"
 
-type ResourceGateway struct{}
+type ResourceGateway struct {
+	ResourceSrvURL string
+}
 
 type TmpResource struct {
 	Name        string `json:"name"`
@@ -18,7 +20,8 @@ type TmpResource struct {
 
 func (r *ResourceGateway) FetchUserResource(accessToken string) (string, error) {
 	// TODO: hard code change path from arg
-	req, _ := http.NewRequest(http.MethodPost, "http://localhost:9001"+resourceAPI, nil)
+	req, _ := http.NewRequest(http.MethodPost, r.ResourceSrvURL, nil)
+	req.URL.Path = resourceAPI
 	req.Header.Set("Authorization", "Bearer "+accessToken)
 	// api exec
 	client := http.Client{}
