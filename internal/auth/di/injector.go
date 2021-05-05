@@ -38,6 +38,7 @@ func injectAction() *controller.Actions {
 
 	return &controller.Actions{
 		HealthCheck: common.NewHealthCheck(),
+		// OAuth2/OIDC
 		GetAuthorize: &controller.GetAuthorize{
 			UseCase:  u.GetAuthorize,
 			Renderer: r,
@@ -48,6 +49,10 @@ func injectAction() *controller.Actions {
 		},
 		IssueToken: &controller.IssueToken{
 			UseCase:  u.IssueToken,
+			Renderer: r,
+		},
+		// Resource
+		ShowUserResource: &controller.ShowUserResource{
 			Renderer: r,
 		},
 	}
