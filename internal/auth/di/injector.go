@@ -34,12 +34,13 @@ func injectRouter() http.Handler {
 
 func injectAction() *controller.Actions {
 	r := presenter.NewRenderer()
-	u := injectUseCase()
+	usecase := injectUseCase()
 
 	return &controller.Actions{
 		HealthCheck: common.NewHealthCheck(),
+		// OAuth2/OIDC
 		GetAuthorize: &controller.GetAuthorize{
-			UseCase:  u.GetAuthorize,
+			UseCase:  usecase.GetAuthorize,
 			Renderer: r,
 			AppURL:   conf.HTTP.URL,
 		},
@@ -47,7 +48,12 @@ func injectAction() *controller.Actions {
 			Renderer: r,
 		},
 		IssueToken: &controller.IssueToken{
-			UseCase:  u.IssueToken,
+			UseCase:  usecase.IssueToken,
+			Renderer: r,
+		},
+		// Resource
+		ShowUserResource: &controller.ShowUserResource{
+			UseCase:  usecase.GetUserResource,
 			Renderer: r,
 		},
 	}
@@ -57,11 +63,14 @@ func injectUseCase() *usecase.UseCase {
 	srv := injectService()
 
 	return &usecase.UseCase{
+		// OAuth2/OIDC
 		GetAuthorize: &usecase.GetAuthorizeInteractor{
 			URLService: srv.URL,
 		},
-
 		IssueToken: &usecase.IssueTokenInteractor{},
+
+		// Resource
+		GetUserResource: &usecase.GetUserResourceInteractor{},
 	}
 }
 

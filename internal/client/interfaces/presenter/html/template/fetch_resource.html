@@ -1,0 +1,14 @@
+{{ template "header" .}}
+{{ if .Output }}
+<div>
+  <h1>Your resource</h1>
+  <p>Name: {{ .Output.Name }}</p>
+  <p>Description: {{ .Output.Description }}</p>
+</div>
+{{ else }}
+<div>
+  <h1>Error</h1>
+  <p>Missing Access Token</p>
+</div>
+{{ end }}
+{{ template "footer"}}
