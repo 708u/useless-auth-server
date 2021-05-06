@@ -36,5 +36,5 @@ func (s *ShowUserResource) Action(w http.ResponseWriter, r *http.Request) {
 		Description: out.Description,
 	}
 	// TODO: temporal render
-	s.Renderer.Set(jsonRender.NewRenderHandler(w, r, resp, 200)).Render()
+	_ = s.Renderer.Set(jsonRender.NewRenderHandler(w, r, resp, 200)).Render()
 }
