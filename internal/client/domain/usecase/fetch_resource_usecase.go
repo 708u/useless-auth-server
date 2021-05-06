@@ -11,7 +11,8 @@ type FetchResourceInput struct {
 }
 
 type FetchResourceOutput struct {
-	URI string
+	Name        string
+	Description string
 }
 
 type FetchResourceInteractor struct {
@@ -19,10 +20,13 @@ type FetchResourceInteractor struct {
 }
 
 func (f *FetchResourceInteractor) Handle(in FetchResourceInput) (FetchResourceOutput, error) {
-	_, err := f.ResourceRepo.FetchUserResource(in.AccessToken)
+	src, err := f.ResourceRepo.FetchUserResource(in.AccessToken)
 	if err != nil {
 		return FetchResourceOutput{}, err
 	}
 
-	return FetchResourceOutput{}, nil
+	return FetchResourceOutput{
+		Name:        src.Name,
+		Description: src.Description,
+	}, nil
 }

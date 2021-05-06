@@ -20,7 +20,11 @@ func NewFetchResource(u usecase.FetchResourceUseCase, r presenter.Renderer) *Fet
 
 func (f *FetchResource) Action(w http.ResponseWriter, r *http.Request) {
 	// TODO: hard cord
-	f.UseCase.Handle(usecase.FetchResourceInput{AccessToken: "access-token"})
+	out, err := f.UseCase.Handle(usecase.FetchResourceInput{AccessToken: "access-token"})
+	if err != nil {
+		_ = f.Renderer.Set(html.NewRenderHandler(w, clientHTML.T, clientHTML.FetchResourceIndex)).Render()
+		return
+	}
 	// TODO: error handling
-	_ = f.Renderer.Set(html.NewRenderHandler(w, clientHTML.T, clientHTML.FetchResourceIndex)).Render()
+	_ = f.Renderer.Set(html.NewRenderHandler(w, clientHTML.T, clientHTML.FetchResourceIndex, html.WithOutput(out))).Render()
 }
