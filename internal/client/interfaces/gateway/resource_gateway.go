@@ -19,7 +19,6 @@ type TmpResource struct {
 }
 
 func (r *ResourceGateway) FetchUserResource(accessToken string) (string, error) {
-	// TODO: hard code change path from arg
 	req, _ := http.NewRequest(http.MethodPost, r.ResourceSrvURL, nil)
 	req.URL.Path = resourceAPI
 	req.Header.Set("Authorization", "Bearer "+accessToken)
